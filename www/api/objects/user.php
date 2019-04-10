@@ -12,6 +12,7 @@ class User {
     public $userid;
     public $passwordPlain;
     public $passwordHashed;
+    public $identifier;
     public $error;
 
     // constructor with $db as database connection
@@ -137,9 +138,36 @@ class User {
 
       //check if password is correct
       if (password_verify($this->passwordPlain, $this->passwordHashed)) {
-        $this->serverToken = $row['token'];
-        $this->serverSecret = $row['secret'];
         $this->userid = $row['id'];
+
+        //create new pair of secret and token
+        $this->secret = base64_encode(random_bytes(24));
+        $this->token = base64_encode(random_bytes(12));
+
+        $query = "INSERT INTO token SET user=:user, identifier=:identifier, token=:token, secret=:secret";
+
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // bind values
+        $stmt->bindParam(":user", $user->user);
+        $stmt->bindParam(":identifier", $this->identifier);
+        $stmt->bindParam(":token", $this->token);
+        $stmt->bindParam(":secret", $this->secret);
+
+
+        // execute query
+        if($stmt->execute()){
+          return true;
+          echo $this->token'\n';
+          echo $this->secret;
+        } else {
+          return false;
+        }
+
+        //$this->serverToken = $row['token'];
+        //$this->serverSecret = $row['secret'];
+
         return true;
       } else {
         $this->error = "wrong password";
