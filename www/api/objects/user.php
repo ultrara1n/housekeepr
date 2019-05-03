@@ -92,11 +92,11 @@ class User {
 
       if(!isset($this->error)){
 
-        //generate token and secret and check if they are unique
+        // generate token and secret and check if they are unique
         $this->secret = base64_encode(random_bytes(24));
         $this->token = base64_encode(random_bytes(12));
 
-        //hash password
+        // hash password
         $this->passwordHashed = $this->passwordPlain;
 
         return true;

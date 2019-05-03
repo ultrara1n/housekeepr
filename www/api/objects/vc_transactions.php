@@ -40,6 +40,9 @@ class VCTransactions {
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
 
+        // start new total
+        $total = 0;
+
         // read items for this receipt
         $query = "SELECT vc_transactions.id AS receipt_id, vc_categories.name AS category, vc_transactions.amount AS amount, vc_transactions.comment AS comment
                   FROM vc_transactions, vc_categories
@@ -63,12 +66,16 @@ class VCTransactions {
           );
 
           array_push($items_arr, $items_item);
+
+          // add up total
+          $total = $total + $amount;
         }
 
         $receipt_item=array(
           "id" => $id,
           "date" => $date,
           "shop" => $shop,
+          "total" => $total,
           "items" => $items_arr
         );
 
