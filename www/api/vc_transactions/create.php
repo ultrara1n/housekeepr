@@ -44,6 +44,7 @@ if(!empty($data->date) && !empty($data->shop) && !empty($data->items)){
     $transaction->date = $data->date;
     $transaction->shop = $data->shop;
     $transaction->items = $data->items;
+    $transaction->comment = $data->comment;
 
     // create the receipt and the transactions
     if($transaction->create($user)){

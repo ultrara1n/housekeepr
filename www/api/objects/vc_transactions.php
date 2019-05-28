@@ -87,7 +87,7 @@ class VCTransactions {
 
   function create($user){
     // create the receipt
-    $query = "INSERT INTO vc_receipts SET shop=:shop, user=:user, date=:date";
+    $query = "INSERT INTO vc_receipts SET shop=:shop, user=:user, date=:date, comment=:comment";
 
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -96,6 +96,7 @@ class VCTransactions {
     $stmt->bindParam(":user", $user->userid);
     $stmt->bindParam(":date", $this->date);
     $stmt->bindParam(":shop", $this->shop);
+    $stmt->bindParam(":comment", $this->comment);
 
     // execute query
     if(!$stmt->execute()){
