@@ -21,7 +21,7 @@ class VCTransactions {
   // read products
   function read($user, $results){
       // select all receipts
-      $query = "SELECT vc_receipts.id AS id, vc_shops.name as shop, vc_receipts.date AS date
+      $query = "SELECT vc_receipts.id AS id, vc_shops.name as shop, vc_receipts.date AS date, vc_receipts.comment AS receipt_comment
                 FROM vc_receipts, vc_shops
                 WHERE vc_receipts.shop = vc_shops.id AND user = ".$user->userid."
                 ORDER BY date DESC
@@ -44,7 +44,7 @@ class VCTransactions {
         $total = 0;
 
         // read items for this receipt
-        $query = "SELECT vc_transactions.id AS receipt_id, vc_categories.name AS category, vc_transactions.amount AS amount, vc_transactions.comment AS comment
+        $query = "SELECT vc_transactions.id AS transaction_id, vc_categories.name AS category, vc_transactions.amount AS amount, vc_transactions.comment AS comment
                   FROM vc_transactions, vc_categories
                   WHERE vc_transactions.category = vc_categories.id AND vc_transactions.receipt_id = ".$id;
 
@@ -59,7 +59,7 @@ class VCTransactions {
           extract($row);
 
           $items_item=array(
-            "id"=>$receipt_id,
+            "id"=>$transaction_id,
             "category"=>$category,
             "amount"=>$amount,
             "comment"=>$comment
@@ -76,6 +76,7 @@ class VCTransactions {
           "date" => $date,
           "shop" => $shop,
           "total" => $total,
+          "comment" => $receipt_comment,
           "items" => $items_arr
         );
 
