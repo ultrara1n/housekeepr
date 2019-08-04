@@ -44,7 +44,7 @@ if(!empty($data->date) && !empty($data->value) && !empty($data->counter)){
         http_response_code(201);
 
         // tell the user
-        echo json_encode(array("message" => "Transaction created."));
+        echo json_encode(array("error" => NULL, "message" => "Reading created."));
     }
 //
 //     // if unable to create the product, tell the user
