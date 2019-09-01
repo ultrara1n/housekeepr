@@ -73,7 +73,7 @@ class PowerCounter {
     return $readings_arr;
   }
 
-  // create product
+  // create reading
   function addReading($user){
 
     // query to insert record
@@ -87,9 +87,13 @@ class PowerCounter {
     $this->value=htmlspecialchars(strip_tags($this->value));
     $this->counter=htmlspecialchars(strip_tags($this->counter));
 
+    // convert date/time
+    $timeObject = new DateTime($this->date);
+    $convertedTime = $timeObject->format('Y-m-d H:i:s');
+
     // bind values
     $stmt->bindParam(":user", $user->userid);
-    $stmt->bindParam(":date", $this->date);
+    $stmt->bindParam(":date", $convertedTime);
     $stmt->bindParam(":value", $this->value);
     $stmt->bindParam(":counter", $this->counter);
 
