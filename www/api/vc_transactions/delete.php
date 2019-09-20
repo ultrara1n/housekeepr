@@ -31,10 +31,10 @@ $transaction = new VCTransactions($db);
 $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
-if(!empty($data->receipt_id)){
+if(!empty($data->id)){
 
     // set transaction property values
-    $transaction->receipt_id = $data->receipt_id;
+    $transaction->receipt_id = $data->id;
 
 
     // create the receipt and the transactions
