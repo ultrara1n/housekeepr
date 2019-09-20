@@ -31,34 +31,25 @@ $transaction = new VCTransactions($db);
 $data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
-if(!empty($data->date) && !empty($data->shop) && !empty($data->items)){
-    // check if there are items if they are correctly filled
-    foreach($data->items as &$item){
-      if($item->category < 0 || !is_numeric($item->amount)){
-        echo json_encode(array("error" => "Submitted data malformed."));
-        exit;
-      }
-    }
+if(!empty($data->receipt_id)){
 
     // set transaction property values
-    $transaction->date = $data->date;
-    $transaction->shop = $data->shop;
-    $transaction->items = $data->items;
-    $transaction->comment = $data->comment;
+    $transaction->receipt_id = $data->receipt_id;
+
 
     // create the receipt and the transactions
-    if($transaction->create($user)){
+    if($transaction->delete($user)){
         // set response code - 201 created
         http_response_code(201);
 
         // tell the user
-        echo json_encode(array("error" => NULL, "id" => $transaction->insertid, "message" => "Receipt created and filled."));
+        echo json_encode(array("error" => NULL, "id" => $transaction->receipt_id, "message" => "Receipt deleted."));
     } else {
         // set response code - 503 service unavailable
         http_response_code(503);
 
         // tell the user
-        echo json_encode(array("error" => "Unable to create receipt."));
+        echo json_encode(array("error" => "Unable to delete receipt."));
     }
 }
 
@@ -69,6 +60,5 @@ else {
     http_response_code(400);
 
     // tell the user
-    echo json_encode(array("error" => "Unable to create transaction. Data is incomplete."));
+    echo json_encode(array("error" => "Unable to delete receipt, information missing."));
 }
-?>

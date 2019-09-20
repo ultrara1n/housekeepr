@@ -12,6 +12,7 @@ class VCTransactions {
   public $comment;
   public $amount;
   public $items;
+  public $insertid;
 
   // constructor with $db as database connection
   public function __construct($db){
@@ -105,7 +106,7 @@ class VCTransactions {
     }
 
     // get receipt id
-    $insertid = $this->conn->lastInsertId();
+    $this->insertid = $this->conn->lastInsertId();
 
     // insert all items
     foreach($this->items as &$item){
@@ -116,7 +117,7 @@ class VCTransactions {
       $stmt = $this->conn->prepare($query);
 
       // bind values
-      $stmt->bindParam(":receipt_id", $insertid);
+      $stmt->bindParam(":receipt_id", $this->insertid);
       $stmt->bindParam(":category", $item->category);
       $stmt->bindParam(":amount", $item->amount);
       $stmt->bindParam(":comment", $item->comment);
@@ -125,6 +126,38 @@ class VCTransactions {
       if(!$stmt->execute()){
         return false;
       }
+    }
+
+    return true;
+  }
+
+  function delete($user){
+    // query for transaction deletion
+    $query = "DELETE FROM vc_transactions WHERE receipt_id =:receipt_id";
+
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+
+    // bind values
+    $stmt->bindParam(":receipt_id", $this->receipt_id);
+
+    // execute query
+    if(!$stmt->execute()){
+      return false;
+    }
+
+    // query for receipt deletion
+    $query = "DELETE FROM vc_receipts WHERE id =:receipt_id";
+
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+
+    // bind values
+    $stmt->bindParam(":receipt_id", $this->receipt_id);
+
+    // execute query
+    if(!$stmt->execute()){
+      return false;
     }
 
     return true;
